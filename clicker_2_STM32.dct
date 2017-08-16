@@ -427,6 +427,7 @@ ackm_otg_hs_hcintmsk6_bit
 ackm_otg_hs_hcintmsk7_bit
 ackm_otg_hs_hcintmsk8_bit
 ackm_otg_hs_hcintmsk9_bit
+acos
 active0
 active0
 active0_bit
@@ -2437,6 +2438,7 @@ arr9_tim6_arr_bit
 arr9_tim7_arr_bit
 arr9_tim8_arr_bit
 arr9_tim9_arr_bit
+asin
 asvld
 asvld
 asvld
@@ -2451,6 +2453,8 @@ asyncwait_bit
 asyncwait_fsmc_bcr2_bit
 asyncwait_fsmc_bcr3_bit
 asyncwait_fsmc_bcr4_bit
+atan
+atan2
 atthizx
 atthizx
 atthizx
@@ -6828,6 +6832,7 @@ ceataendie_bit
 cecs
 cecs
 cecs_bit
+ceil
 ceis
 ceis
 ceis_bit
@@ -6951,6 +6956,7 @@ chdis_otg_hs_hcchar6_bit
 chdis_otg_hs_hcchar7_bit
 chdis_otg_hs_hcchar8_bit
 chdis_otg_hs_hcchar9_bit
+checkmpu6050
 chekxforevent
 chena
 chena
@@ -8677,6 +8683,8 @@ cont
 cont_adc2_cr2_bit
 cont_adc3_cr2_bit
 cont_bit
+cos
+cosh
 countflag
 countflag
 countflag_bit
@@ -17887,6 +17895,7 @@ exid9_can2_ri0r_bit
 exid9_can2_ri1r_bit
 exid9_can2_ti1r_bit
 exid9_can2_ti2r_bit
+exp
 exten
 exten
 exten
@@ -18092,6 +18101,7 @@ f_s
 f_s_bit
 f_s_i2c1_ccr_bit
 f_s_i2c2_ccr_bit
+fabs
 faccen
 faccen
 faccen
@@ -19099,6 +19109,7 @@ flash_srbits
 flitflpen
 flitflpen
 flitflpen_bit
+floor
 fmi
 fmi
 fmi
@@ -19287,6 +19298,7 @@ freq5
 freq5_bit
 freq5_i2c1_cr2_bit
 freq5_i2c2_cr2_bit
+frexp
 frf
 frf
 frf
@@ -23448,6 +23460,12 @@ irs
 irs_bit
 irs_fsmc_sr3_bit
 irs_fsmc_sr4_bit
+isalnum
+isalpha
+iscntrl
+isdigit
+isgraph
+islower
 isoodrp
 isoodrp
 isoodrp
@@ -23461,12 +23479,16 @@ isoodrpm_otg_hs_gintmsk_bit
 isothren
 isothren
 isothren_bit
+ispunct
 isrpending
 isrpending
 isrpending_bit
 isrpreempt
 isrpreempt
 isrpreempt_bit
+isspace
+isupper
+isxdigit
 it4_rmp
 it4_rmp
 it4_rmp
@@ -25565,6 +25587,7 @@ lckk_gpiog_lckr_bit
 lckk_gpioh_lckr_bit
 ld1
 ld2
+ldexp
 lec
 lec
 lec
@@ -25654,6 +25677,8 @@ lock0_tim8_bdtr_bit
 lock1
 lock1_bit
 lock1_tim8_bdtr_bit
+log
+log10
 low
 low
 low0
@@ -28482,6 +28507,7 @@ moder91_gpioe_moder_bit
 moder91_gpiof_moder_bit
 moder91_gpiog_moder_bit
 moder91_gpioh_moder_bit
+modf
 modf_
 modf_
 modf_
@@ -34379,6 +34405,7 @@ pos
 pos_bit
 pos_i2c1_cr1_bit
 pos_i2c2_cr1_bit
+pow
 ppre10
 ppre10
 ppre10_bit
@@ -37294,6 +37321,8 @@ re_uart5_cr1_bit
 re_usart1_cr1_bit
 re_usart2_cr1_bit
 re_usart3_cr1_bit
+readbyte
+readbytes
 ready
 ready
 ready_bit
@@ -38680,6 +38709,7 @@ sedet_otg_hs_gotgint_bit
 seis
 seis
 seis_bit
+selftestmpu6050
 ser
 ser
 ser_bit
@@ -39281,6 +39311,8 @@ silm
 silm
 silm_bit
 silm_can1_btr_bit
+sin
+sinh
 sjw
 sjw
 sjw0
@@ -39857,6 +39889,7 @@ spliten_otg_hs_hcsplt9_bit
 spreadsel
 spreadsel
 spreadsel_bit
+sprintf
 sq1
 sq1
 sq1
@@ -40225,6 +40258,7 @@ sq94
 sq94_adc2_sqr2_bit
 sq94_adc3_sqr2_bit
 sq94_bit
+sqrt
 sr
 sr
 sr
@@ -41290,6 +41324,8 @@ tamppudis_bit
 tampts
 tampts
 tampts_bit
+tan
+tanh
 tar
 tar
 tar
@@ -42811,6 +42847,7 @@ tocal1_otg_hs_gusbcfg_bit
 tocal2
 tocal2_bit
 tocal2_otg_hs_gusbcfg_bit
+tolower
 tom
 tom
 tom
@@ -42820,6 +42857,7 @@ tom_bit
 tom_otg_hs_diepeachmsk1_bit
 tom_otg_hs_diepmsk_bit
 tom_otg_hs_doepeachmsk1_bit
+toupper
 tpd
 tpd0
 tpd0_bit
@@ -45014,6 +45052,7 @@ wren_bit
 wren_fsmc_bcr2_bit
 wren_fsmc_bcr3_bit
 wren_fsmc_bcr4_bit
+writebyte
 wrp
 wrp0
 wrp0_bit

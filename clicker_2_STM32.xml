@@ -1,0 +1,13 @@
+<clicker_2_STM32>
+	<Attributes>
+		<Url></Url>
+		<Image>clicker_2_STM32.jpg</Image>
+		<File></File>
+	</Attributes>
+	<Events>
+		<OnLeftClick></OnLeftClick>
+		<OnRightClick></OnRightClick>
+		<OnDblClick></OnDblClick>
+		<OnMouseOver>PreviewImage</OnMouseOver>
+	</Events>
+</clicker_2_STM32>
