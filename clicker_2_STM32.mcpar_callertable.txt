@@ -45,5 +45,12 @@ main
 				floor
 				ldexp
 				eval_poly
+	calculateAccelAndGyroBiases
+		writeByte
+		readBytes
+			I2C2_Start
+			I2C2_Write
+			I2C2_Read
+		__CC2DW
 	__CC2DW
 	__FillZeros

@@ -2719,6 +2719,9 @@ b6
 b7
 b8
 b9
+bax
+bay
+baz
 bberr
 bberr
 bberr
@@ -2903,6 +2906,9 @@ bg
 bg
 bg_bit
 bg_tim8_egr_bit
+bgx
+bgy
+bgz
 bidimode
 bidimode
 bidimode
@@ -4522,6 +4528,7 @@ byte36
 byte36_bit
 byte37
 byte37_bit
+calculateaccelandgyrobiases
 calm
 calm0
 calm0_bit
