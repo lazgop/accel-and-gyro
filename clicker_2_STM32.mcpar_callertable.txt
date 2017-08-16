@@ -52,5 +52,8 @@ main
 			I2C2_Write
 			I2C2_Read
 		__CC2DW
+	initMPU6050
+		writeByte
+		readByte
 	__CC2DW
 	__FillZeros

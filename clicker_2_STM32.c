@@ -21,10 +21,33 @@
 #define XA_OFFSET_H     0x06
 #define YA_OFFSET_H     0x08
 #define ZA_OFFSET_H     0x0A
-
+#define INT_PIN_CFG     0x37
+#define MOT_THR         0x1F
+#define MOT_DUR         0x20
+#define MOT_DETECT_CTRL 0x69
 
 sbit LD1 at ODR12_GPIOE_ODR_bit;
 sbit LD2 at ODR15_GPIOE_ODR_bit;
+
+// Accelerometer scale bits for AFS
+enum Ascale {
+  AFS_2G = 0,
+  AFS_4G,
+  AFS_8G,
+  AFS_16G
+};
+
+// Gyroscope scale bits for GFS
+enum Gscale {
+  GFS_250DPS = 0,
+  GFS_500DPS,
+  GFS_1000DPS,
+  GFS_2000DPS
+};
+
+// Preset values for AFS and GFS
+int Gscale = GFS_250DPS;
+int Ascale = AFS_2G;
 
 // Calculated accelerometer and gyroscope biases
 float bax, bay, baz, bgx, bgy, bgz;
@@ -260,6 +283,30 @@ void calculateAccelAndGyroBiases() {
     baz = (float)accel_bias[2]/(float)accelsensitivity;
 }
 
+void initMPU6050() {
+    uint8_t c;
+    writeByte(PWR_MGMT_1, 0x09);              // also disable temperature sensor
+    writeByte(CONFIG, 0x06);
+    writeByte(SMPLRT_DIV, 0x04);
+    c =  readByte(GYRO_CONFIG);
+    writeByte(GYRO_CONFIG, c & ~0xE0);        // Clear self-test bits [7:5]
+    writeByte(GYRO_CONFIG, c & ~0x18);        // Clear AFS bits [4:3]
+    writeByte(GYRO_CONFIG, c | Gscale << 3);  // Set full scale range for the gyro
+
+    c =  readByte(ACCEL_CONFIG);
+    writeByte(ACCEL_CONFIG, c & ~0xE0);       // Clear self-test bits [7:5]
+    writeByte(ACCEL_CONFIG, c & ~0x18);       // Clear AFS bits [4:3]
+    writeByte(ACCEL_CONFIG, c | Ascale << 3); // Set full scale range for the accelerometer
+
+    writeByte(INT_PIN_CFG, 0xA0);
+    writeByte(MOT_THR, 0x14);
+    writeByte(MOT_DUR, 0x28);
+    writeByte(MOT_DETECT_CTRL, 0x15);
+    writeByte(INT_ENABLE, 0x40);
+}
+
+
+
 void main() {
      // Leds for testing
      GPIO_Digital_Output(&GPIOE_BASE, _GPIO_PINMASK_12 | _GPIO_PINMASK_15);
@@ -278,6 +325,10 @@ void main() {
      }
      
      calculateAccelAndGyroBiases();
+     
+     initMPU6050();
+     
+     
 
      LD1 = 1;
      LD2 = 1;

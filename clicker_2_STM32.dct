@@ -2438,6 +2438,7 @@ arr9_tim6_arr_bit
 arr9_tim7_arr_bit
 arr9_tim8_arr_bit
 arr9_tim9_arr_bit
+ascale
 asin
 asvld
 asvld
@@ -20318,6 +20319,7 @@ gpioilpen_bit
 gpioirst
 gpioirst
 gpioirst_bit
+gscale
 gt
 gt
 gt
@@ -23301,6 +23303,7 @@ init_uart4
 initf
 initf
 initf_bit
+initmpu6050
 inits
 inits
 inits_bit
