@@ -2,4 +2,17 @@ main
 	GPIO_Digital_Output
 		GPIO_Config
 			GPIO_Clk_Enable
+	init_uart4
+		UART4_Init_Advanced
+			UARTx_Init_Advanced
+				RCC_GetClocksFrequency
+					Get_Fosc_kHz
+				GPIO_Alternate_Function_Enable
+					GPIO_Config_Pin_Alternate_Function
+						GPIO_Config
+	init_i2c2
+		I2C2_Init_Advanced
+			I2Cx_Init_Advanced
+				GPIO_Alternate_Function_Enable
+				RCC_GetClocksFrequency
 	__FillZeros
