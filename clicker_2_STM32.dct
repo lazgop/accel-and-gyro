@@ -23310,6 +23310,7 @@ initmpu6050
 inits
 inits
 inits_bit
+inittimer2
 inmis
 inmis
 inmis_bit
@@ -33240,6 +33241,7 @@ pa9_dma2_s7par_bit
 padrstf
 padrstf
 padrstf_bit
+pair
 partno
 partno0
 partno0_bit
@@ -42805,6 +42807,7 @@ timeout
 timeout_bit
 timeout_i2c1_sr1_bit
 timeout_i2c2_sr1_bit
+timer2_interrupt
 tjtie
 tjtie
 tjtie_bit

@@ -827,27 +827,11 @@ VMOV.F32	S0, #1
 VCMPE.F32	S7, S0
 VMRS	#60, FPSCR
 MOVW	R1, #0
-BLE	L__selfTestMPU605050
+BLE	L__selfTestMPU605052
 MOVS	R1, #1
-L__selfTestMPU605050:
+L__selfTestMPU605052:
 VMOV.F32	S0, #1
 VCMPE.F32	S6, S0
-VMRS	#60, FPSCR
-MOVW	R0, #0
-BLE	L__selfTestMPU605051
-MOVS	R0, #1
-L__selfTestMPU605051:
-ORRS	R1, R0
-VMOV.F32	S0, #1
-VCMPE.F32	S5, S0
-VMRS	#60, FPSCR
-MOVW	R0, #0
-BLE	L__selfTestMPU605052
-MOVS	R0, #1
-L__selfTestMPU605052:
-ORRS	R1, R0
-VMOV.F32	S0, #1
-VCMPE.F32	S4, S0
 VMRS	#60, FPSCR
 MOVW	R0, #0
 BLE	L__selfTestMPU605053
@@ -855,7 +839,7 @@ MOVS	R0, #1
 L__selfTestMPU605053:
 ORRS	R1, R0
 VMOV.F32	S0, #1
-VCMPE.F32	S3, S0
+VCMPE.F32	S5, S0
 VMRS	#60, FPSCR
 MOVW	R0, #0
 BLE	L__selfTestMPU605054
@@ -863,12 +847,28 @@ MOVS	R0, #1
 L__selfTestMPU605054:
 ORRS	R1, R0
 VMOV.F32	S0, #1
-VCMPE.F32	S1, S0
+VCMPE.F32	S4, S0
 VMRS	#60, FPSCR
 MOVW	R0, #0
 BLE	L__selfTestMPU605055
 MOVS	R0, #1
 L__selfTestMPU605055:
+ORRS	R1, R0
+VMOV.F32	S0, #1
+VCMPE.F32	S3, S0
+VMRS	#60, FPSCR
+MOVW	R0, #0
+BLE	L__selfTestMPU605056
+MOVS	R0, #1
+L__selfTestMPU605056:
+ORRS	R1, R0
+VMOV.F32	S0, #1
+VCMPE.F32	S1, S0
+VMRS	#60, FPSCR
+MOVW	R0, #0
+BLE	L__selfTestMPU605057
+MOVS	R0, #1
+L__selfTestMPU605057:
 ORR	R0, R1, R0, LSL #0
 CMP	R0, #0
 IT	EQ
@@ -1629,16 +1629,16 @@ ADD	SP, SP, #4
 BX	LR
 ; end of _initMPU6050
 _THE_FUNCTION:
-;clicker_2_STM32.c,374 :: 		void THE_FUNCTION() {
+;clicker_2_STM32.c,373 :: 		void THE_FUNCTION() {
 SUB	SP, SP, #28
 STR	LR, [SP, #0]
-;clicker_2_STM32.c,378 :: 		readAccelData(accelData);
+;clicker_2_STM32.c,377 :: 		readAccelData(accelData);
 ADD	R0, SP, #4
 BL	_readAccelData+0
-;clicker_2_STM32.c,379 :: 		readGyroData(gyroData);
+;clicker_2_STM32.c,378 :: 		readGyroData(gyroData);
 ADD	R0, SP, #16
 BL	_readGyroData+0
-;clicker_2_STM32.c,381 :: 		sprintf(buffer, "\r\n%f\r\n", accelData[0]);
+;clicker_2_STM32.c,380 :: 		sprintf(buffer, "\r\n%f x m/s2\r\n", accelData[0]);
 ADD	R0, SP, #4
 VLDR	#1, S0, [R0, #0]
 MOVW	R1, #lo_addr(?lstr_3_clicker_2_STM32+0)
@@ -1650,11 +1650,11 @@ PUSH	(R1)
 PUSH	(R0)
 BL	_sprintf+0
 ADD	SP, SP, #12
-;clicker_2_STM32.c,382 :: 		UART4_Write_Text(buffer);
+;clicker_2_STM32.c,381 :: 		UART4_Write_Text(buffer);
 MOVW	R0, #lo_addr(_buffer+0)
 MOVT	R0, #hi_addr(_buffer+0)
 BL	_UART4_Write_Text+0
-;clicker_2_STM32.c,383 :: 		sprintf(buffer, "%f\r\n", accelData[1]);
+;clicker_2_STM32.c,382 :: 		sprintf(buffer, "%f y m/s2\r\n", accelData[1]);
 ADD	R0, SP, #4
 ADDS	R0, R0, #4
 VLDR	#1, S0, [R0, #0]
@@ -1667,11 +1667,11 @@ PUSH	(R1)
 PUSH	(R0)
 BL	_sprintf+0
 ADD	SP, SP, #12
-;clicker_2_STM32.c,384 :: 		UART4_Write_Text(buffer);
+;clicker_2_STM32.c,383 :: 		UART4_Write_Text(buffer);
 MOVW	R0, #lo_addr(_buffer+0)
 MOVT	R0, #hi_addr(_buffer+0)
 BL	_UART4_Write_Text+0
-;clicker_2_STM32.c,385 :: 		sprintf(buffer, "%f\r\n", accelData[2]);
+;clicker_2_STM32.c,384 :: 		sprintf(buffer, "%f z m/s2\r\n", accelData[2]);
 ADD	R0, SP, #4
 ADDS	R0, #8
 VLDR	#1, S0, [R0, #0]
@@ -1684,11 +1684,11 @@ PUSH	(R1)
 PUSH	(R0)
 BL	_sprintf+0
 ADD	SP, SP, #12
-;clicker_2_STM32.c,386 :: 		UART4_Write_Text(buffer);
+;clicker_2_STM32.c,385 :: 		UART4_Write_Text(buffer);
 MOVW	R0, #lo_addr(_buffer+0)
 MOVT	R0, #hi_addr(_buffer+0)
 BL	_UART4_Write_Text+0
-;clicker_2_STM32.c,388 :: 		sprintf(buffer, "%f\r\n", gyroData[0]);
+;clicker_2_STM32.c,387 :: 		sprintf(buffer, "%f x deg/s\r\n", gyroData[0]);
 ADD	R0, SP, #16
 VLDR	#1, S0, [R0, #0]
 MOVW	R1, #lo_addr(?lstr_6_clicker_2_STM32+0)
@@ -1700,11 +1700,11 @@ PUSH	(R1)
 PUSH	(R0)
 BL	_sprintf+0
 ADD	SP, SP, #12
-;clicker_2_STM32.c,389 :: 		UART4_Write_Text(buffer);
+;clicker_2_STM32.c,388 :: 		UART4_Write_Text(buffer);
 MOVW	R0, #lo_addr(_buffer+0)
 MOVT	R0, #hi_addr(_buffer+0)
 BL	_UART4_Write_Text+0
-;clicker_2_STM32.c,390 :: 		sprintf(buffer, "%f\r\n", gyroData[1]);
+;clicker_2_STM32.c,389 :: 		sprintf(buffer, "%f y deg/s\r\n", gyroData[1]);
 ADD	R0, SP, #16
 ADDS	R0, R0, #4
 VLDR	#1, S0, [R0, #0]
@@ -1717,11 +1717,11 @@ PUSH	(R1)
 PUSH	(R0)
 BL	_sprintf+0
 ADD	SP, SP, #12
-;clicker_2_STM32.c,391 :: 		UART4_Write_Text(buffer);
+;clicker_2_STM32.c,390 :: 		UART4_Write_Text(buffer);
 MOVW	R0, #lo_addr(_buffer+0)
 MOVT	R0, #hi_addr(_buffer+0)
 BL	_UART4_Write_Text+0
-;clicker_2_STM32.c,392 :: 		sprintf(buffer, "%f\r\n", gyroData[2]);
+;clicker_2_STM32.c,391 :: 		sprintf(buffer, "%f z deg/s\r\n", gyroData[2]);
 ADD	R0, SP, #16
 ADDS	R0, #8
 VLDR	#1, S0, [R0, #0]
@@ -1734,76 +1734,180 @@ PUSH	(R1)
 PUSH	(R0)
 BL	_sprintf+0
 ADD	SP, SP, #12
-;clicker_2_STM32.c,393 :: 		UART4_Write_Text(buffer);
+;clicker_2_STM32.c,392 :: 		UART4_Write_Text(buffer);
 MOVW	R0, #lo_addr(_buffer+0)
 MOVT	R0, #hi_addr(_buffer+0)
 BL	_UART4_Write_Text+0
-;clicker_2_STM32.c,394 :: 		}
+;clicker_2_STM32.c,393 :: 		}
 L_end_THE_FUNCTION:
 LDR	LR, [SP, #0]
 ADD	SP, SP, #28
 BX	LR
 ; end of _THE_FUNCTION
+_initTimer2:
+;clicker_2_STM32.c,400 :: 		void initTimer2() {
+SUB	SP, SP, #4
+STR	LR, [SP, #0]
+;clicker_2_STM32.c,401 :: 		RCC_APB1ENR.TIM2EN = 1;
+MOVS	R1, #1
+SXTB	R1, R1
+MOVW	R0, #lo_addr(RCC_APB1ENR+0)
+MOVT	R0, #hi_addr(RCC_APB1ENR+0)
+STR	R1, [R0, #0]
+;clicker_2_STM32.c,402 :: 		TIM2_CR1.CEN = 0;
+MOVS	R1, #0
+SXTB	R1, R1
+MOVW	R0, #lo_addr(TIM2_CR1+0)
+MOVT	R0, #hi_addr(TIM2_CR1+0)
+STR	R1, [R0, #0]
+;clicker_2_STM32.c,403 :: 		TIM2_PSC = 959;
+MOVW	R1, #959
+MOVW	R0, #lo_addr(TIM2_PSC+0)
+MOVT	R0, #hi_addr(TIM2_PSC+0)
+STR	R1, [R0, #0]
+;clicker_2_STM32.c,404 :: 		TIM2_ARR = 62499;
+MOVW	R1, #62499
+MOVW	R0, #lo_addr(TIM2_ARR+0)
+MOVT	R0, #hi_addr(TIM2_ARR+0)
+STR	R1, [R0, #0]
+;clicker_2_STM32.c,405 :: 		NVIC_IntEnable(IVT_INT_TIM2);
+MOVW	R0, #44
+BL	_NVIC_IntEnable+0
+;clicker_2_STM32.c,406 :: 		TIM2_DIER.UIE = 1;
+MOVS	R1, #1
+SXTB	R1, R1
+MOVW	R0, #lo_addr(TIM2_DIER+0)
+MOVT	R0, #hi_addr(TIM2_DIER+0)
+STR	R1, [R0, #0]
+;clicker_2_STM32.c,407 :: 		TIM2_CR1.CEN = 1;
+MOVW	R0, #lo_addr(TIM2_CR1+0)
+MOVT	R0, #hi_addr(TIM2_CR1+0)
+STR	R1, [R0, #0]
+;clicker_2_STM32.c,408 :: 		}
+L_end_initTimer2:
+LDR	LR, [SP, #0]
+ADD	SP, SP, #4
+BX	LR
+; end of _initTimer2
+_Timer2_interrupt:
+;clicker_2_STM32.c,412 :: 		void Timer2_interrupt() iv IVT_INT_TIM2 {
+SUB	SP, SP, #4
+STR	LR, [SP, #0]
+;clicker_2_STM32.c,413 :: 		DisableInterrupts();
+BL	_DisableInterrupts+0
+;clicker_2_STM32.c,414 :: 		TIM2_SR.UIF = 0;
+MOVS	R1, #0
+SXTB	R1, R1
+MOVW	R0, #lo_addr(TIM2_SR+0)
+MOVT	R0, #hi_addr(TIM2_SR+0)
+STR	R1, [R0, #0]
+;clicker_2_STM32.c,416 :: 		if (pair == 1) {
+MOVW	R0, #lo_addr(_pair+0)
+MOVT	R0, #hi_addr(_pair+0)
+LDRSH	R0, [R0, #0]
+CMP	R0, #1
+IT	NE
+BNE	L_Timer2_interrupt35
+;clicker_2_STM32.c,417 :: 		pair = 0;
+MOVS	R1, #0
+SXTH	R1, R1
+MOVW	R0, #lo_addr(_pair+0)
+MOVT	R0, #hi_addr(_pair+0)
+STRH	R1, [R0, #0]
+;clicker_2_STM32.c,418 :: 		THE_FUNCTION();        // THE_FUNCTION executes every 1s
+BL	_THE_FUNCTION+0
+;clicker_2_STM32.c,419 :: 		} else {
+IT	AL
+BAL	L_Timer2_interrupt36
+L_Timer2_interrupt35:
+;clicker_2_STM32.c,420 :: 		pair = 1;
+MOVS	R1, #1
+SXTH	R1, R1
+MOVW	R0, #lo_addr(_pair+0)
+MOVT	R0, #hi_addr(_pair+0)
+STRH	R1, [R0, #0]
+;clicker_2_STM32.c,421 :: 		}
+L_Timer2_interrupt36:
+;clicker_2_STM32.c,423 :: 		TIM2_PSC = 960;           // Set Timer2 Interrupt time to 500ms
+MOVW	R1, #960
+MOVW	R0, #lo_addr(TIM2_PSC+0)
+MOVT	R0, #hi_addr(TIM2_PSC+0)
+STR	R1, [R0, #0]
+;clicker_2_STM32.c,424 :: 		TIM2_ARR = 62499;
+MOVW	R1, #62499
+MOVW	R0, #lo_addr(TIM2_ARR+0)
+MOVT	R0, #hi_addr(TIM2_ARR+0)
+STR	R1, [R0, #0]
+;clicker_2_STM32.c,425 :: 		EnableInterrupts();
+BL	_EnableInterrupts+0
+;clicker_2_STM32.c,426 :: 		}
+L_end_Timer2_interrupt:
+LDR	LR, [SP, #0]
+ADD	SP, SP, #4
+BX	LR
+; end of _Timer2_interrupt
 _main:
-;clicker_2_STM32.c,396 :: 		void main() {
-;clicker_2_STM32.c,398 :: 		GPIO_Digital_Output(&GPIOE_BASE, _GPIO_PINMASK_12 | _GPIO_PINMASK_15);
+;clicker_2_STM32.c,430 :: 		void main() {
+;clicker_2_STM32.c,432 :: 		GPIO_Digital_Output(&GPIOE_BASE, _GPIO_PINMASK_12 | _GPIO_PINMASK_15);
 MOVW	R1, #36864
 MOVW	R0, #lo_addr(GPIOE_BASE+0)
 MOVT	R0, #hi_addr(GPIOE_BASE+0)
 BL	_GPIO_Digital_Output+0
-;clicker_2_STM32.c,399 :: 		LD1 = 0;
+;clicker_2_STM32.c,433 :: 		LD1 = 0;
 MOVS	R1, #0
 SXTB	R1, R1
 MOVW	R0, #lo_addr(ODR12_GPIOE_ODR_bit+0)
 MOVT	R0, #hi_addr(ODR12_GPIOE_ODR_bit+0)
 STR	R1, [R0, #0]
-;clicker_2_STM32.c,400 :: 		LD2 = 0;
+;clicker_2_STM32.c,434 :: 		LD2 = 0;
 MOVW	R0, #lo_addr(ODR15_GPIOE_ODR_bit+0)
 MOVT	R0, #hi_addr(ODR15_GPIOE_ODR_bit+0)
 STR	R1, [R0, #0]
-;clicker_2_STM32.c,402 :: 		init_uart4();
+;clicker_2_STM32.c,436 :: 		init_uart4();
 BL	_init_uart4+0
-;clicker_2_STM32.c,403 :: 		init_i2c2();
+;clicker_2_STM32.c,437 :: 		init_i2c2();
 BL	_init_i2c2+0
-;clicker_2_STM32.c,405 :: 		if (checkMPU6050() == 1) {
+;clicker_2_STM32.c,439 :: 		if (checkMPU6050() == 1) {
 BL	_checkMPU6050+0
 CMP	R0, #1
 IT	NE
-BNE	L_main35
-;clicker_2_STM32.c,406 :: 		return;
+BNE	L_main37
+;clicker_2_STM32.c,440 :: 		return;
 IT	AL
 BAL	L_end_main
-;clicker_2_STM32.c,407 :: 		}
-L_main35:
-;clicker_2_STM32.c,409 :: 		if (selfTestMPU6050() == 1) {
+;clicker_2_STM32.c,441 :: 		}
+L_main37:
+;clicker_2_STM32.c,443 :: 		if (selfTestMPU6050() == 1) {
 BL	_selfTestMPU6050+0
 CMP	R0, #1
 IT	NE
-BNE	L_main36
-;clicker_2_STM32.c,410 :: 		return;
+BNE	L_main38
+;clicker_2_STM32.c,444 :: 		return;
 IT	AL
 BAL	L_end_main
-;clicker_2_STM32.c,411 :: 		}
-L_main36:
-;clicker_2_STM32.c,413 :: 		calculateAccelAndGyroBiases();
+;clicker_2_STM32.c,445 :: 		}
+L_main38:
+;clicker_2_STM32.c,447 :: 		calculateAccelAndGyroBiases();
 BL	_calculateAccelAndGyroBiases+0
-;clicker_2_STM32.c,415 :: 		initMPU6050();
+;clicker_2_STM32.c,449 :: 		initMPU6050();
 BL	_initMPU6050+0
-;clicker_2_STM32.c,419 :: 		LD1 = 1;
+;clicker_2_STM32.c,450 :: 		initTimer2();
+BL	_initTimer2+0
+;clicker_2_STM32.c,452 :: 		LD1 = 1;
 MOVS	R1, #1
 SXTB	R1, R1
 MOVW	R0, #lo_addr(ODR12_GPIOE_ODR_bit+0)
 MOVT	R0, #hi_addr(ODR12_GPIOE_ODR_bit+0)
 STR	R1, [R0, #0]
-;clicker_2_STM32.c,420 :: 		LD2 = 1;
+;clicker_2_STM32.c,453 :: 		LD2 = 1;
 MOVW	R0, #lo_addr(ODR15_GPIOE_ODR_bit+0)
 MOVT	R0, #hi_addr(ODR15_GPIOE_ODR_bit+0)
 STR	R1, [R0, #0]
-;clicker_2_STM32.c,421 :: 		while(1);
-L_main37:
+;clicker_2_STM32.c,454 :: 		while(1);
+L_main39:
 IT	AL
-BAL	L_main37
-;clicker_2_STM32.c,422 :: 		}
+BAL	L_main39
+;clicker_2_STM32.c,455 :: 		}
 L_end_main:
 L__main_end_loop:
 B	L__main_end_loop

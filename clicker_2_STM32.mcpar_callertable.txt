@@ -55,5 +55,23 @@ main
 	initMPU6050
 		writeByte
 		readByte
+	initTimer2
+		NVIC_IntEnable
 	__CC2DW
 	__FillZeros
+Timer2_interrupt
+	DisableInterrupts
+	THE_FUNCTION
+		readAccelData
+			readBytes
+			getAres
+		readGyroData
+			readBytes
+			getGres
+		sprintf
+			_doprntf
+				isdigit
+				scale
+				fround
+		UART4_Write_Text
+	EnableInterrupts

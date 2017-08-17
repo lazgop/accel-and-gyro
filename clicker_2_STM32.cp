@@ -389,7 +389,6 @@ void initMPU6050() {
 
 
 
-
 char buffer[16];
 
 void THE_FUNCTION() {
@@ -399,20 +398,55 @@ void THE_FUNCTION() {
  readAccelData(accelData);
  readGyroData(gyroData);
 
- sprintf(buffer, "\r\n%f\r\n", accelData[0]);
+ sprintf(buffer, "\r\n%f x m/s2\r\n", accelData[0]);
  UART4_Write_Text(buffer);
- sprintf(buffer, "%f\r\n", accelData[1]);
+ sprintf(buffer, "%f y m/s2\r\n", accelData[1]);
  UART4_Write_Text(buffer);
- sprintf(buffer, "%f\r\n", accelData[2]);
+ sprintf(buffer, "%f z m/s2\r\n", accelData[2]);
  UART4_Write_Text(buffer);
 
- sprintf(buffer, "%f\r\n", gyroData[0]);
+ sprintf(buffer, "%f x deg/s\r\n", gyroData[0]);
  UART4_Write_Text(buffer);
- sprintf(buffer, "%f\r\n", gyroData[1]);
+ sprintf(buffer, "%f y deg/s\r\n", gyroData[1]);
  UART4_Write_Text(buffer);
- sprintf(buffer, "%f\r\n", gyroData[2]);
+ sprintf(buffer, "%f z deg/s\r\n", gyroData[2]);
  UART4_Write_Text(buffer);
 }
+
+
+
+
+
+
+void initTimer2() {
+ RCC_APB1ENR.TIM2EN = 1;
+ TIM2_CR1.CEN = 0;
+ TIM2_PSC = 959;
+ TIM2_ARR = 62499;
+ NVIC_IntEnable(IVT_INT_TIM2);
+ TIM2_DIER.UIE = 1;
+ TIM2_CR1.CEN = 1;
+}
+
+int pair = 0;
+
+void Timer2_interrupt() iv IVT_INT_TIM2 {
+ DisableInterrupts();
+ TIM2_SR.UIF = 0;
+
+ if (pair == 1) {
+ pair = 0;
+ THE_FUNCTION();
+ } else {
+ pair = 1;
+ }
+
+ TIM2_PSC = 960;
+ TIM2_ARR = 62499;
+ EnableInterrupts();
+}
+
+
 
 void main() {
 
@@ -434,8 +468,7 @@ void main() {
  calculateAccelAndGyroBiases();
 
  initMPU6050();
-
-
+ initTimer2();
 
  LD1 = 1;
  LD2 = 1;
