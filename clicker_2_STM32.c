@@ -25,6 +25,8 @@
 #define MOT_THR         0x1F
 #define MOT_DUR         0x20
 #define MOT_DETECT_CTRL 0x69
+#define ACCEL_XOUT_H    0x3B
+#define GYRO_XOUT_H     0x43
 
 sbit LD1 at ODR12_GPIOE_ODR_bit;
 sbit LD2 at ODR15_GPIOE_ODR_bit;
@@ -51,6 +53,9 @@ int Ascale = AFS_2G;
 
 // Calculated accelerometer and gyroscope biases
 float bax, bay, baz, bgx, bgy, bgz;
+
+
+//*************************** UTILITY FUNCTIONS START ***************************
 
 // Initializes UART on PA0 and PA1 pins
 void init_uart4() {
@@ -91,6 +96,61 @@ void writeByte(unsigned char registerAddress, unsigned char byte){
      I2C2_Write(MPU6050_ADDRESS, write_data, 2, END_MODE_STOP);
 }
 
+// Get gyroscope resolution from GFS
+float getGres() {
+  switch (Gscale) {
+     case GFS_250DPS: return 250.0/32768.0;
+     case GFS_500DPS: return 500.0/32768.0;
+     case GFS_1000DPS: return 1000.0/32768.0;
+     case GFS_2000DPS: return 2000.0/32768.0;
+  }
+}
+
+// Get accelerometer resolution from AFS
+float getAres() {
+  switch (Ascale){
+     case AFS_2G: return 2.0/32768.0;
+     case AFS_4G: return 4.0/32768.0;
+     case AFS_8G: return 8.0/32768.0;
+     case AFS_16G: return 16.0/32768.0;
+  }
+}
+
+// Get x/y/z values in m/s2
+void readAccelData(float * destination){
+  uint8_t rawData[6];                                        // x/y/z accel register data stored here
+  int16_t temp[3];
+
+  readBytes(ACCEL_XOUT_H, 6, &rawData[0]);                   // Read the six raw data registers into data array
+  
+  temp[0] = (int16_t)((rawData[0] << 8) | rawData[1]) ;      // Turn the MSB and LSB into a signed 16-bit value
+  temp[1] = (int16_t)((rawData[2] << 8) | rawData[3]) ;
+  temp[2] = (int16_t)((rawData[4] << 8) | rawData[5]) ;
+  
+  destination[0] = ((float)temp[0]*getAres() - bax) * 9.81;  // Get accel value in m/s2, this depends on scale being set
+  destination[1] = ((float)temp[1]*getAres() - bay) * 9.81;
+  destination[2] = ((float)temp[2]*getAres() - baz) * 9.81;
+}
+
+// Get x/y/z values in degrees per second
+void readGyroData(float * destination){
+  uint8_t rawData[6];                                        // x/y/z gyro register data stored here
+  int16_t temp[3];
+  
+  readBytes(GYRO_XOUT_H, 6, &rawData[0]);                    // Read the six raw data registers sequentially into data array
+  
+  temp[0] = (int16_t)((rawData[0] << 8) | rawData[1]) ;      // Turn the MSB and LSB into a signed 16-bit value
+  temp[1] = (int16_t)((rawData[2] << 8) | rawData[3]) ;
+  temp[2] = (int16_t)((rawData[4] << 8) | rawData[5]) ;
+  
+  destination[0] = (float)temp[0]*getGres() - bgx;           // Get gyro value in degrees per second, this depends on scale being set
+  destination[1] = (float)temp[1]*getGres() - bgy;
+  destination[2] = (float)temp[2]*getGres() - bgz;
+}
+
+//**************************** UTILITY FUNCTIONS END ****************************
+
+//***************************** MPU6050 SETUP START *****************************
 
 // Requests ID from mpu6050 0x68 reg and returns 0 on success, otherwise return 1
 int checkMPU6050() {
@@ -249,7 +309,6 @@ void calculateAccelAndGyroBiases() {
     // compensation calculations. Accelerometer bias registers expect bias input as 2048 LSB per g, so that
     // the accelerometer biases calculated above must be divided by 8.
 
-
     readBytes(XA_OFFSET_H, 2, &data_[0]); // Read factory accelerometer trim values
     accel_bias_reg[0] = (int16_t) ((int16_t)data_[0] << 8) | data_[1];
     readBytes(YA_OFFSET_H, 2, &data_[0]);
@@ -261,7 +320,7 @@ void calculateAccelAndGyroBiases() {
       if(accel_bias_reg[ii] & mask) mask_bit[ii] = 0x01; // If temperature compensation bit is set, record that fact in mask_bit
     }
 
-  // Construct total accelerometer bias, including calculated average accelerometer bias from above
+    // Construct total accelerometer bias, including calculated average accelerometer bias from above
     accel_bias_reg[0] -= (accel_bias[0]/8); // Subtract calculated averaged accelerometer bias scaled to 2048 LSB/g (16 g full scale)
     accel_bias_reg[1] -= (accel_bias[1]/8);
     accel_bias_reg[2] -= (accel_bias[2]/8);
@@ -277,7 +336,7 @@ void calculateAccelAndGyroBiases() {
     data_[5] = data_[5] | mask_bit[2]; // preserve temperature compensation bit when writing back to accelerometer bias registers
 
 
-// Output scaled accelerometer biases for manual subtraction in the main program
+    // Output scaled accelerometer biases for manual subtraction in the main program
     bax = (float)accel_bias[0]/(float)accelsensitivity;
     bay = (float)accel_bias[1]/(float)accelsensitivity;
     baz = (float)accel_bias[2]/(float)accelsensitivity;
@@ -285,7 +344,7 @@ void calculateAccelAndGyroBiases() {
 
 void initMPU6050() {
     uint8_t c;
-    writeByte(PWR_MGMT_1, 0x09);              // also disable temperature sensor
+    writeByte(PWR_MGMT_1, 0x09);              // Also disable temperature sensor
     writeByte(CONFIG, 0x06);
     writeByte(SMPLRT_DIV, 0x04);
     c =  readByte(GYRO_CONFIG);
@@ -305,7 +364,34 @@ void initMPU6050() {
     writeByte(INT_ENABLE, 0x40);
 }
 
+//****************************** MPU6050 SETUP END ******************************
 
+
+//********************************* CORE START **********************************
+
+char buffer[16];
+
+void THE_FUNCTION() {
+    float accelData[3];
+    float gyroData[3];
+    
+    readAccelData(accelData);
+    readGyroData(gyroData);
+    
+    sprintf(buffer, "\r\n%f\r\n", accelData[0]);
+    UART4_Write_Text(buffer);
+    sprintf(buffer, "%f\r\n", accelData[1]);
+    UART4_Write_Text(buffer);
+    sprintf(buffer, "%f\r\n", accelData[2]);
+    UART4_Write_Text(buffer);
+
+    sprintf(buffer, "%f\r\n", gyroData[0]);
+    UART4_Write_Text(buffer);
+    sprintf(buffer, "%f\r\n", gyroData[1]);
+    UART4_Write_Text(buffer);
+    sprintf(buffer, "%f\r\n", gyroData[2]);
+    UART4_Write_Text(buffer);
+}
 
 void main() {
      // Leds for testing

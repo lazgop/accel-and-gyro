@@ -48,7 +48,7 @@ typedef unsigned long int uintptr_t;
 
 typedef signed long long intmax_t;
 typedef unsigned long long uintmax_t;
-#line 29 "C:/Users/lazar/Desktop/mips_projekat/clicker_2_STM32.c"
+#line 31 "C:/Users/lazar/Desktop/mips_projekat/clicker_2_STM32.c"
 sbit LD1 at ODR12_GPIOE_ODR_bit;
 sbit LD2 at ODR15_GPIOE_ODR_bit;
 
@@ -74,6 +74,9 @@ int Ascale = AFS_2G;
 
 
 float bax, bay, baz, bgx, bgy, bgz;
+
+
+
 
 
 void init_uart4() {
@@ -113,6 +116,61 @@ void writeByte(unsigned char registerAddress, unsigned char byte){
  I2C2_Start();
  I2C2_Write( 0x68 , write_data, 2, END_MODE_STOP);
 }
+
+
+float getGres() {
+ switch (Gscale) {
+ case GFS_250DPS: return 250.0/32768.0;
+ case GFS_500DPS: return 500.0/32768.0;
+ case GFS_1000DPS: return 1000.0/32768.0;
+ case GFS_2000DPS: return 2000.0/32768.0;
+ }
+}
+
+
+float getAres() {
+ switch (Ascale){
+ case AFS_2G: return 2.0/32768.0;
+ case AFS_4G: return 4.0/32768.0;
+ case AFS_8G: return 8.0/32768.0;
+ case AFS_16G: return 16.0/32768.0;
+ }
+}
+
+
+void readAccelData(float * destination){
+ uint8_t rawData[6];
+ int16_t temp[3];
+
+ readBytes( 0x3B , 6, &rawData[0]);
+
+ temp[0] = (int16_t)((rawData[0] << 8) | rawData[1]) ;
+ temp[1] = (int16_t)((rawData[2] << 8) | rawData[3]) ;
+ temp[2] = (int16_t)((rawData[4] << 8) | rawData[5]) ;
+
+ destination[0] = ((float)temp[0]*getAres() - bax) * 9.81;
+ destination[1] = ((float)temp[1]*getAres() - bay) * 9.81;
+ destination[2] = ((float)temp[2]*getAres() - baz) * 9.81;
+}
+
+
+void readGyroData(float * destination){
+ uint8_t rawData[6];
+ int16_t temp[3];
+
+ readBytes( 0x43 , 6, &rawData[0]);
+
+ temp[0] = (int16_t)((rawData[0] << 8) | rawData[1]) ;
+ temp[1] = (int16_t)((rawData[2] << 8) | rawData[3]) ;
+ temp[2] = (int16_t)((rawData[4] << 8) | rawData[5]) ;
+
+ destination[0] = (float)temp[0]*getGres() - bgx;
+ destination[1] = (float)temp[1]*getGres() - bgy;
+ destination[2] = (float)temp[2]*getGres() - bgz;
+}
+
+
+
 
 
 
@@ -272,7 +330,6 @@ void calculateAccelAndGyroBiases() {
 
 
 
-
  readBytes( 0x06 , 2, &data_[0]);
  accel_bias_reg[0] = (int16_t) ((int16_t)data_[0] << 8) | data_[1];
  readBytes( 0x08 , 2, &data_[0]);
@@ -328,6 +385,35 @@ void initMPU6050() {
  writeByte( 0x38 , 0x40);
 }
 
+
+
+
+
+
+char buffer[16];
+
+void THE_FUNCTION() {
+ float accelData[3];
+ float gyroData[3];
+
+ readAccelData(accelData);
+ readGyroData(gyroData);
+
+ sprintf(buffer, "\r\n%f\r\n", accelData[0]);
+ UART4_Write_Text(buffer);
+ sprintf(buffer, "%f\r\n", accelData[1]);
+ UART4_Write_Text(buffer);
+ sprintf(buffer, "%f\r\n", accelData[2]);
+ UART4_Write_Text(buffer);
+
+ sprintf(buffer, "%f\r\n", gyroData[0]);
+ UART4_Write_Text(buffer);
+ sprintf(buffer, "%f\r\n", gyroData[1]);
+ UART4_Write_Text(buffer);
+ sprintf(buffer, "%f\r\n", gyroData[2]);
+ UART4_Write_Text(buffer);
+}
+
 void main() {
 
  GPIO_Digital_Output(&GPIOE_BASE, _GPIO_PINMASK_12 | _GPIO_PINMASK_15);
@@ -348,6 +434,8 @@ void main() {
  calculateAccelAndGyroBiases();
 
  initMPU6050();
+
+
 
  LD1 = 1;
  LD2 = 1;

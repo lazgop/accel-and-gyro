@@ -4405,6 +4405,7 @@ btf
 btf_bit
 btf_i2c1_sr1_bit
 btf_i2c2_sr1_bit
+buffer
 bursten
 bursten
 bursten
@@ -19901,6 +19902,8 @@ gencall_bit
 gencall_i2c1_sr2_bit
 gencall_i2c2_sr2_bit
 get_fosc_khz
+getares
+getgres
 ginakeff
 ginakeff
 ginakeff
@@ -37331,8 +37334,10 @@ re_uart5_cr1_bit
 re_usart1_cr1_bit
 re_usart2_cr1_bit
 re_usart3_cr1_bit
+readacceldata
 readbyte
 readbytes
+readgyrodata
 ready
 ready
 ready_bit
@@ -42013,6 +42018,7 @@ tgt_can1_tdt1r_bit
 tgt_can1_tdt2r_bit
 tgt_can2_tdt1r_bit
 tgt_can2_tdt2r_bit
+the_function
 ti1s
 ti1s
 ti1s
